@@ -1,0 +1,23 @@
+﻿@using SimpleForumMVC.Models
+@model CommentSubmitModel
+
+
+@using (Ajax.BeginForm("InputComment", "Comment",
+    new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "Post",
+        UpdateTargetId = Model.TargetId
+    }))
+{
+    <div class="control-group">
+            @Html.LabelFor(model => model.CommentContent, new { @class = "control-label" })
+            <div class="controls">
+                @Html.EditorFor(model => model.CommentContent)
+            </div>
+        </div>
+    
+   @Html.HiddenFor(model=>model.AnswerId)
+    <input type="submit" value="Submit Commnet" />
+   
+}

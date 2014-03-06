@@ -1,0 +1,13 @@
+﻿@model SimpleForumMVC.Models.ImageModel
+
+@{
+    var imageSrcPath = @Url.Action("GetImage", "User");
+}
+
+<img width="150" height="150" src="@imageSrcPath" alt="No Image" />
+ @if (Model.imageFile!=null)
+ {
+     <a href="/user/delete/">Delete</a>
+ }         
+
+            

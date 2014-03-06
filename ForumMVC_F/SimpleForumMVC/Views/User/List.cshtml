@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<string>
+@using SimpleForumMVC.HtmlHelpes
+<div class="qa-main">
+    <h1>All Users </h1>
+    <table class="qa-top-users-table">
+        <tbody>
+            @foreach (var username in Model)
+            {
+                <tr>
+                    <td class="qa-top-users-label">
+                        <a href="qa-avatar-link" class="">
+                            <span style="display:inline-block; padding:0px 0px 0px 0px;">
+                                <img class="qa-avatar-image" width="30" height="30" src="@Url.Action("GetImage", "User", new { username = @username})" />
+                            </span>
+                        </a>
+                        <a class="qa-user-link" href="@Url.Action("UserActivity", "User", new { userName=username })">@username</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="qa-suggest-next">
+    @Html.PageLinks((SimpleForumMVC.Models.PagingInfo)ViewBag.PageInfo,
+         x => Url.Action("List", new { page = x }))
+</div>

@@ -1,0 +1,77 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SimpleForumMVC.Models
+@using SimpleForumMVC.Models.HelperMethods
+@model IEnumerable<UserActivityViewModel>
+
+<div class="qa-main">
+
+    <h2>Activity by @User.Identity.Name</h2>
+    @{
+        var imageSrc = Url.Action("GetImage", "User", new { username = (string)@ViewBag.userName });
+        <img width="150" height="150" src="@imageSrc" alt="No Image" />
+    }
+    <table class="qa-form-wide-table">
+        @{
+
+            int allCountQuestions = (int)@ViewBag.allCountQuestions;
+            int allCountAnswers = (int)@ViewBag.allCountAnswers;
+            int allCountComments = (int)@ViewBag.allCountComments;
+
+
+
+            <tbody>
+                <tr>
+                    <td class="qa-form-wide-label">Questions</td>
+                    <td class="qa-form-wide-data">@allCountQuestions</td>
+                </tr>
+                <tr>
+                    <td class="qa-form-wide-label">Answers</td>
+                    <td class="qa-form-wide-data">@allCountAnswers</td>
+                </tr>
+                <tr>
+                    <td class="qa-form-wide-label">Comments</td>
+                    <td class="qa-form-wide-data">@allCountComments</td>
+                </tr>
+            </tbody>
+        }
+    </table>
+    <div class="qa-main">
+        <h2>Recent activity by @User.Identity.Name</h2>
+        <div class="qa-q-list">
+            @foreach (var item in Model)
+            {
+                <div class="qa-q-list-item">
+                    <span class="qa-a-count">
+                        <span class="qa-a-count-data">@item.AnswersCount</span>
+                        <span class="qa-a-count-pad">answers</span>
+                    </span>
+                    <div class="qa-q-item-main">
+                        <div class="qa-q-item-title">
+                            @Html.ActionLink(item.QuestionTitle, "Details", "Question", new { id = item.QuestionId }, null)
+                        </div>
+                        @{
+                string time = TimeHelpers.GetTimeDiff(item.MostRecentDate);
+                <span> @Html.ActionLink(@item.TypeActivity, "Details", "Question", new { id = item.QuestionId }, null)</span>
+                            <span> @time </span>
+                            <span> @Html.ActionLink(item.CategoryName, "Category")</span>
+                            <span>by</span>
+                string username = (string)ViewBag.userName;
+                <span><a class="qa-user-link url nickname" href="@Url.Action("UserActivity", "User", new { userName = username })">@username</a></span>
+                        }
+                    </div>
+                    <div class="qa-q-item-clear"> </div>
+                </div>
+            }
+
+            <div>
+                @Html.ActionLink("Back to List", "List")
+            </div>
+        </div>
+
+        <div class="qa-suggest-next">
+
+        </div>
+
+    </div>

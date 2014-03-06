@@ -1,0 +1,51 @@
+@using SimpleForumMVC.Models;
+@using Microsoft.AspNet.Identity;
+@{
+    ViewBag.Title = "Manage Account";
+}
+
+<hgroup>
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div class="row-fluid">
+    <div class="span6">
+        @if (ViewBag.HasLocalPassword)
+        {
+            @Html.Partial("_ChangePasswordPartial")
+        }
+        else
+        {
+            @Html.Partial("_SetPasswordPartial")
+        }
+    </div>
+    <div class="span6">
+        @if (User.Identity.IsAuthenticated)
+        {
+            var imageSrc = Url.Action("GetImage", "User", new { username= User.Identity.Name });
+             <img width="150" height="150" src="@imageSrc" alt="No Image"/>
+            if ((bool)ViewBag.isHaveImage)
+            {
+                <a href="/user/delete/">Delete</a>
+            }
+        }
+        <p>
+            Upload Image
+        </p>
+        <form action="/User/UploadImage" method="post" enctype="multipart/form-data">
+            <label for="file">FileName: </label>
+            <input id="file" type="file" name="image" />
+            <input type="submit" value="Upload" />
+        </form> 
+    </div>
+        @*<section id="externalLogins">
+            @Html.Action("RemoveAccountList")
+
+            @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+        </section>*@
+   
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

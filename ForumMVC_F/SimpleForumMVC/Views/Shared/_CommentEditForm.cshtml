@@ -1,0 +1,35 @@
+﻿@using SimpleForumMVC.Models
+@model CommentSubmitModel
+@using (Ajax.BeginForm("EditComment", "Comment",
+    new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "Post",
+        UpdateTargetId = Model.TargetId
+    }
+
+
+))
+{
+    <div class="control-group">
+        @Html.LabelFor(model => model.CommentContent, new { @class = "control-label" })
+        <div class="controls">
+            @Html.EditorFor(model => model.CommentContent)
+            @Html.ValidationMessageFor(model => model.CommentContent, null, new { @class = "help-inline" })
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.CommentId)
+    @Html.HiddenFor(model => model.TargetId)
+    <input type="submit" value="Edit Commnet" />
+   
+     @Ajax.ActionLink("cancel", "EditCommentCancel", "Comment", new { commentId = Model.CommentId, targetId=Model.TargetId },
+                        new AjaxOptions
+                        {
+                            UpdateTargetId = Model.TargetId,
+                            InsertionMode = InsertionMode.Replace,
+                            HttpMethod = "GET"
+                        },
+                        new { @class = "qa-form-light-button" })
+
+}

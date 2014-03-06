@@ -1,0 +1,51 @@
+﻿@using SimpleForumMVC.Models.HelperMethods
+@using SimpleForumMVC.HtmlHelpes
+@using SimpleForumMVC.Models
+@model IEnumerable<SimpleForumMVC.Models.Question>
+
+@{
+    ViewBag.Title = "Forum";
+}
+
+<div class="qa-main">
+    <h1> Recent questions and answers </h1>
+    <div class="qa-q-list">
+        @foreach (var item in Model)
+        {
+            <div class="qa-q-list-item">
+                <span class="qa-a-count">
+                    <span class="qa-a-count-data">@item.Answers.Count</span>
+                    <span class="qa-a-count-pad">answers</span>
+                </span>
+                <div class="qa-q-item-main">
+                    <div class="qa-q-item-title">
+                        @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, null)
+                    </div>
+                    @{
+            string time = TimeHelpers.GetTimeDiff(item.LastAnswerDate);
+            <span>asked</span>
+                        <span> @time</span>
+                        <span> @Html.ActionLink(item.Category.Name, "Category", new { categoryId=item.CategoryId })</span>
+                        <span>by</span>
+                        <span><a class="qa-user-link url nickname" href="@Url.Action("UserActivity", "User", new { userName=@item.ApplicationUser.UserName })">@item.ApplicationUser.UserName</a></span>
+                    }
+                </div>
+                <div class="qa-q-item-clear"> </div>
+            </div>
+        }
+
+
+
+
+    </div>
+
+</div>
+<div class="qa-suggest-next">
+    @Html.PageLinks((SimpleForumMVC.Models.PagingInfo)ViewBag.PageInfo, x => Url.Action("Index", new { page = x }))
+</div>
+
+
+
+
+
+

@@ -1,0 +1,47 @@
+﻿@using SimpleForumMVC.Models
+@using SimpleForumMVC.Models.HelperMethods
+@model CommentModel
+
+    @Model.Comment.Content
+    <div class="a-c-item-footer">
+        <span class="qa-c-item-avatar">
+            <a class="qa-avatar-link" href="#">
+                <img class="qa-avatar-image" width="20" height="20" src="@Url.Action("GetImage", "User", new { username = @Model.Comment.ApplicationUser.UserName })">
+            </a>
+        </span>
+        <span class="qa-c-item-meta">
+            @Html.ActionLink("commented", "Details", "Question", new { id = @Model.Comment.Answer.QuestionId },
+        new { @class = "qa-c-item-what" })
+        </span>
+        <span class="qa-q-view-when">
+            <span class="qa-c-item-meta">
+                <span class="published">
+                    @TimeHelpers.GetTimeDiff(@Model.Comment.CreationDate)
+                </span>
+            </span>
+        </span>
+        <span class="qa-q-view-who">
+            <span class="qa-q-view-who-pad">by </span>
+            <span class="qa-q-view-who-data">
+                <span class="vcard author">
+                    <a class="qa-user-link url nickname" href="@Url.Action("UserActivity", "User", new { userName = @Model.Comment.ApplicationUser.UserName })">@Model.Comment.ApplicationUser.UserName</a>
+                </span>
+            </span>
+        </span>
+
+    </div>
+    <div class="qa-q-view-buttons">
+        @if (User.Identity.IsAuthenticated && User.Identity.Name == @Model.Comment.ApplicationUser.UserName)
+        {
+            @Ajax.ActionLink("edit", "CommentFormEdit", "Comment", new { commentId = @Model.Comment.Id, targetId = @Model.TargetId },
+                new AjaxOptions
+                {
+                    UpdateTargetId = @Model.TargetId,
+                    InsertionMode = InsertionMode.Replace,
+                    HttpMethod = "GET"
+                },
+                new { @class = "qa-form-light-button" })
+        }
+    </div>
+        
+  

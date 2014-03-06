@@ -1,0 +1,110 @@
+@using Microsoft.AspNet.Identity
+<div class="qa-header">
+    @if (Request.IsAuthenticated)
+    {
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-form pull-right" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="qa-nav-user">
+                <div class="qa-logged-in">
+                    <span class="qa-logged-in-pad">Hello </span>
+                    <span class="qa-logged-in-data">
+                        <a class="qa-user-link url nickname" href="@Url.Action("UserActivity", "User", new { userName=User.Identity.Name })">@User.Identity.Name</a>
+                    </span>
+                </div>
+                <ul class="qa-nav-user-list">
+                    <li class="qa-nav-user-item qa-nav-user-account">
+                        <a class="qa-nav-user-link" href="@Url.Action("Manage", "Account")">My Account</a>
+                    </li>
+                    <li class="qa-nav-user-item qa-nav-user-logout">
+                        <a href="javascript:document.getElementById('logoutForm').submit()" class="qa-nav-user-link">Logout</a>
+                    </li>
+                </ul>
+                <div class="qa-nav-user-clear"> </div>
+            </div>
+
+        }
+    }
+    else
+    {
+        <div class="qa-nav-user">
+            <ul class="qa-nav-user-list">
+                <li class="qa-nav-user-item qa-nav-user-login">
+                    <a class="qa-nav-user-link" href="@Url.Action("Login", "Account")">Login</a>
+                </li>
+                <li class="qa-nav-user-item qa-nav-user-register">
+                    <a class="qa-nav-user-link" href="@Url.Action("Register", "Account")">Register</a>
+                </li>
+            </ul>
+            <div class="qa-nav-user-clear"> </div>
+        </div>
+       
+    }
+
+    <div class="qa-nav-main">
+        <ul class="qa-nav-main-list">
+            <li class="qa-nav-main-item qa-nav-main-questions">
+                @if (Request.Url.AbsolutePath == @Url.Action("List", "Question"))
+                {
+                    <a class="qa-nav-main-link qa-nav-main-selected" href="@Url.Action("List", "Question")">Questions</a>
+                }
+                else
+                {
+                    <a class="qa-nav-main-link" href="@Url.Action("List", "Question")">Questions</a>
+                }
+            </li>
+            <li class="qa-nav-main-item qa-nav-main-tag">
+                @if (Request.Url.AbsolutePath.Contains("Tag"))
+                {
+                    <a class="qa-nav-main-link qa-nav-main-selected" href="@Url.Action("List", "Tag")">Tags</a>
+                }
+                else
+                {
+                    <a class="qa-nav-main-link" href="@Url.Action("List", "Tag")">Tags</a>
+                }
+            </li>
+            <li class="qa-nav-main-item qa-nav-main-categories">
+                @if (Request.Url.AbsolutePath.Contains("Category"))
+                {
+                    <a class="qa-nav-main-link qa-nav-main-selected" href="@Url.Action("List", "Category")">Categories</a>
+                }
+                else
+                {
+                    <a class="qa-nav-main-link" href="@Url.Action("List", "Category")">Categories</a>
+                }
+            </li>
+            <li class="qa-nav-main-item qa-nav-main-user ">
+                @if (Request.Url.AbsolutePath == @Url.Action("List", "User"))
+                {
+                    <a class="qa-nav-main-link qa-nav-main-selected" href="@Url.Action("List", "User")">Users</a>
+                }
+                else
+                {
+                    <a class="qa-nav-main-link" href="@Url.Action("List", "User")">Users</a>
+                }
+            </li>
+            <li class="qa-nav-main-item qa-nav-main-ask">
+                @if (Request.Url.AbsolutePath == @Url.Action("Create", "Question"))
+                {
+                    <a class="qa-nav-main-link qa-nav-main-selected" href="@Url.Action("Create", "Question")">Ask a Question</a>
+                }
+                else
+                {
+                    <a class="qa-nav-main-link" href="@Url.Action("Create", "Question")">Ask a Question</a>
+                }
+            </li>
+        </ul>
+        <div>
+            @using (Html.BeginForm("List", "Question", FormMethod.Get, new {@class = "navbar-form pull-right" }))
+            {
+                 <span>Search</span> @Html.TextBox("searchString", "", new { placeholder = "Search question by title" })
+                <input type="submit" value="Search" />
+            }
+        </div>
+        <div class="qa-nav-main-clear"> </div>
+    </div>
+    <div class="qa-header-clear">
+    </div>
+
+</div>

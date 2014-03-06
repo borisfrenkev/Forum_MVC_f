@@ -1,0 +1,150 @@
+﻿@model SimpleForumMVC.Models.Question
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+    <h1>
+        <span class="entry-title">@Model.Title</span>
+    </h1>
+    <div class="qa-q-view-meta">
+        <div class="qa-q-view-content">
+            @Model.Content
+        </div>
+        <div class="qa-q-view-buttons">
+            @Html.ActionLink("Edit", "Edit", "Question", new { id = Model.Id }, new { @class = "qa-form-light-button" })
+        </div>
+    </div>
+    <div class="qa-q-view-tags">
+    <ul class="qa-q-view-tag-list">
+        @foreach (var tag in Model.Tags)
+        {
+            <li class="qa-q-view-tag-item">
+                @Html.ActionLink(tag.Name, "QuestionList", "Tag", new { tagId = tag.Id }, new { @class = "qa-tag-link" })
+            </li>
+        }
+    </ul>
+    </div>
+
+    <div>
+        <span class="qa-q-view-meta">
+            <span class="qa-q-view-what">asked</span>
+            <span class="qa-q-view-when">
+                <span class="qa-q-view-when-data">
+                    <span class="published">
+                        @SimpleForumMVC.Models.HelperMethods.TimeHelpers.GetTimeDiff(@Model.CreationDate)
+                    </span>
+                </span>
+            </span>
+            <span class="qa-q-view-where">
+                <span class="qa-q-view-where-pad">in</span>
+                <span class="qa-q-view-where-data">
+                    @Html.ActionLink(Model.Category.Name, "QuestionList","Category", new { categoryId = Model.CategoryId}, new {@class = "qa-category-link" })
+                </span>
+            </span>
+            <span class="qa-q-view-who">
+                <span class="qa-q-view-who-pad">by </span>
+                <span class="qa-q-view-who-data">
+                    <span class="vcard author">
+                        <a class="qa-user-link url nickname" href="@Url.Action("UserActivity", "User", new { userName = @Model.ApplicationUser.UserName })">@Model.ApplicationUser.UserName</a>
+                    </span>
+                </span>
+            </span>
+        </span>
+    </div>
+
+
+    <div class="qa-q-view-buttons">
+        @Ajax.ActionLink("answer", "AnswerForm", "Answer", new { id = @Model.Id },
+            new AjaxOptions
+            {
+                UpdateTargetId = "Answer",
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "GET"
+            }, new { @class = "qa-form-light-button" }
+        )
+    </div>
+
+    <h2>
+        <span id="a_list_title">@Model.Answers.Count Answers</span>
+    </h2>
+
+    <div id="Answer">
+    </div>
+
+<div id="AllAnswers">
+
+@{
+    int count = 0;
+    foreach (var answer in Model.Answers)
+    {
+        count++;
+        string idAnswer = "answer" + count;
+
+        <div id="@idAnswer" class="qa-a-item-main qa-a-list-item">
+            @Html.Partial("_AnswerPartial", answer)
+            @{
+            string idComment = "commnet" + count;
+            <div class="qa-q-view-buttons">
+            @if (User.Identity.IsAuthenticated && User.Identity.Name == answer.ApplicationUser.UserName)
+            {
+                @Ajax.ActionLink("edit", "AnswerEditForm", "Answer", new
+                    {
+                        answerId = answer.Id,
+                        answerTargetId = idAnswer
+                    },
+                    new AjaxOptions
+                    {
+                        UpdateTargetId = @idAnswer,
+                        InsertionMode = InsertionMode.Replace,
+                        HttpMethod = "GET"
+                    },
+                        new { @class = "qa-form-light-button" }
+                )
+            }
+                
+            @Ajax.ActionLink("comment", "CommentForm", "Comment", new { id = @answer.Id, targetId = idComment,
+                questionId=@Model.Id},
+                new AjaxOptions
+                {
+                    UpdateTargetId = idComment,
+                    InsertionMode = InsertionMode.Replace,
+                    HttpMethod = "GET"
+                },
+                new { @class = "qa-form-light-button" }
+            )
+            @*@if (User.Identity.IsAuthenticated && User.Identity.Name == answer.ApplicationUser.UserName)
+            {
+                @Ajax.ActionLink("edit", "AnswerEditForm", "Answer", new
+                        {
+                            answerId = answer.Id,
+                            answerTargetId = idAnswer
+                        },
+                        new AjaxOptions
+                        {
+                            UpdateTargetId = @idAnswer,
+                            InsertionMode = InsertionMode.Replace,
+                            HttpMethod = "GET"
+                        },
+                         new { @class = "qa-form-light-button" }
+                    )
+            }*@
+        </div>
+      
+        string cl = answer.Comments.Count != 0 ? "qa-a-item-c-list" : string.Empty;
+            }
+            <div class="@cl">
+                @{
+                    <div id=@idComment>
+                            @Html.Partial("_CommentAllPartial", answer.Comments)
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+</div>
+
+
+    

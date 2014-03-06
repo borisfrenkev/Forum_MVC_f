@@ -1,0 +1,49 @@
+﻿@using SimpleForumMVC.Models
+@using SimpleForumMVC.Models.HelperMethods
+@model Answer
+<div class="qa-a-item-content">
+    @Model.Content
+</div>
+<div>
+    <span class="qa-q-view-meta">
+        <span class="qa-a-item-avatar">
+            <a class="qa-avatar-link" href="#">
+                <img class="qa-avatar-image" width="36" height="40" src="@Url.Action("GetImage", "User", new { username = @Model.ApplicationUser.UserName }) ">
+            </a>
+        </span>
+        <span class="qa-q-view-what">@Html.ActionLink("answered", "Details", "Question", new { id = Model.QuestionId }, null)</span>
+        <span class="qa-q-view-when">
+            <span class="qa-q-view-when-data">
+                <span class="published">
+                    @TimeHelpers.GetTimeDiff(Model.CreationDate)
+                </span>
+            </span>
+        </span>
+
+        <span class="qa-q-view-who">
+            <span class="qa-q-view-who-pad">by </span>
+            <span class="qa-q-view-who-data">
+                <span class="vcard author">
+                    <a class="qa-user-link url nickname" href="@Url.Action("UserActivity", "User", new { userName = @Model.ApplicationUser.UserName })">@Model.ApplicationUser.UserName</a>
+                </span>
+            </span>
+        </span>
+    </span>
+    <div class="qa-q-view-buttons">
+        @Ajax.ActionLink("edit", "AnswerNewEditForm", "Answer", new
+                    {
+                        answerId = Model.Id,
+                        answerTargetId = "Answer"
+                    },
+                    new AjaxOptions
+                    {
+                        UpdateTargetId = "Answer",
+                        InsertionMode = InsertionMode.Replace,
+                        HttpMethod = "GET"
+                    },
+                        new { @class = "qa-form-light-button" }
+                )
+    </div>
+    </div>
+
+

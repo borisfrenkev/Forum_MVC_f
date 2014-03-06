@@ -1,0 +1,51 @@
+﻿@using SimpleForumMVC.Models.HelperMethods
+@model IEnumerable<SimpleForumMVC.Models.Question>
+
+@{
+    ViewBag.Title = "Forum";
+}
+@*<div class="qa-body-wrapper">*@
+    
+    <div class="qa-main">
+        <h1> Recent questions and answers </h1>
+        <div class="qa-q-list">
+            @foreach (var item in Model)
+            {
+                <div class="qa-q-list-item">
+                    <span class="qa-a-count">
+                        <span class="qa-a-count-data">@item.Answers.Count</span>
+                        <span class="qa-a-count-pad">answers</span>
+                    </span>
+                    <div class="qa-q-item-main">
+                        <div class="qa-q-item-title">
+                            @Html.ActionLink(item.Title, "Details", "Question", new { id = item.Id }, null)
+                         </div>
+                    @{
+                    string time = TimeHelpers.GetTimeDiff(item.LastAnswerDate);
+                    if (item.LastApplicationUserId != item.ApplicationUserId)
+                    {
+                         <span> @Html.ActionLink("answerd", "Details", "Question", new { id = item.Id }, null)</span>
+                    }
+                    else
+                    {
+                        <span>asked</span>
+                    }
+                    <span> @time </span>
+                          <span>@Html.ActionLink(item.Category.Name, "QuestionList", "Category", new { categoryId = item.CategoryId }, new { @class = "qa-category-link" })</span>
+                    <span>by</span>
+                    <span><a class="qa-user-link url nickname" href="@Url.Action("UserActivity", 
+                        "User", new { userName=@item.ApplicationUser.UserName })">@item.LastApplicationUser.UserName</a></span>
+                    }
+                    </div>
+                    <div class="qa-q-item-clear"> </div>
+                </div>
+            }
+            
+            </div>
+           
+        </div>
+    <div class="qa-suggest-next">
+        To see more, click for the
+        @Html.ActionLink("full List of Quesions", "List", "Question")
+    </div>
+@*</div>*@
